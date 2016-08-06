@@ -6,7 +6,7 @@
   Copyright (C) 2010 Konstantin Tokarev
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
  **********************************************************************/
+
+#include "config.h"
 
 #include "selectrotatetool.h"
 #include <avogadro/atom.h>
@@ -389,7 +391,6 @@ namespace Avogadro {
   {
     if (m_leftButtonPressed && !m_hits.size()) {
       event->accept();
-      QPoint deltaDragging = event->pos() - m_lastDraggingPosition;
 
       if( ( event->pos() - m_initialDraggingPosition ).manhattanLength() > 2 )
         m_movedSinceButtonPressed = true;

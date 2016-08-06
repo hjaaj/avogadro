@@ -6,7 +6,7 @@
   Copyright (C) 2007-2009 by Marcus D. Hanwell
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Some code is based on Open Babel
   For more information, see <http://openbabel.sourceforge.net/>
@@ -23,6 +23,8 @@
 
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+
+#include "config.h"
 
 #include <Eigen/Geometry>
 #include "ui_mainwindow.h"
@@ -180,6 +182,8 @@ namespace Avogadro {
 
       void clearRecentFiles();
       void about();
+      void openManualURL() const;
+      void openForumURL() const;
       void openTutorialURL() const;
       void openReleaseNotesURL() const;
       void openWebsiteURL() const;

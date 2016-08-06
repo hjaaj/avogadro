@@ -7,7 +7,7 @@
   Copyright (C) 2008 by Tim Vandermeersch
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Some code is based on Open Babel
   For more information, see <http://openbabel.sourceforge.net/>
@@ -194,8 +194,6 @@ namespace Avogadro {
 
     // Get the currently selected atoms from the view
     PrimitiveList currentSelection = widget->selectedPrimitives();
-
-    QPoint deltaDragging = event->pos() - m_lastDraggingPosition;
 
     // Manipulation can be performed in two ways - centred on an individual atom
 

@@ -4,7 +4,7 @@
   Copyright (C) 2008,2009 by Tim Vandermeersch
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Some code is based on Open Babel
   For more information, see <http://openbabel.sourceforge.net/>
@@ -51,7 +51,7 @@ namespace Avogadro {
     QString text;
 
     text  = tr("Name: ") + plugin->name() + '\n';
-    text  = tr("Identifier: ") + plugin->identifier() + '\n';
+    text += tr("Identifier: ") + plugin->identifier() + '\n';
     text += tr("File: ") + plugin->fileName() + "\n\n";
     text += tr("Description:\n") + plugin->description() + '\n';
 

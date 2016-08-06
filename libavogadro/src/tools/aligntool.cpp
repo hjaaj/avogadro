@@ -4,7 +4,7 @@
   Copyright (C) 2008 Marcus D. Hanwell
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -251,9 +251,6 @@ namespace Avogadro {
       if (m_selectedAtoms[1].isNull())
         return;
       // Now line up the line from atom[0] to atom[1] with the axis selected
-      double alpha, beta, gamma;
-      alpha = beta = gamma = 0.0;
-
       Vector3d pos = *m_selectedAtoms[1]->pos();
       pos.normalize();
       Vector3d axis;

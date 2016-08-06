@@ -6,7 +6,7 @@
   Copyright (C) 2008,2009 Marcus D. Hanwell
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -344,6 +344,11 @@ namespace Avogadro {
     if(!dir.cd(type + "Scripts")) {
       if (!dir.mkdir(type + "Scripts")) failed = true;
       if (!dir.cd(type + "Scripts")) failed = true;
+    }
+
+    if (failed) {
+      qWarning() << "Insufficient permissions to access scripts directory";
+      return scripts;
     }
 
     foreach (const QString& file, dir.entryList())

@@ -4,7 +4,7 @@
   Copyright (C) 2008-2009 by Marcus D. Hanwell
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU Lesser General Public License as published by
@@ -21,6 +21,8 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
  **********************************************************************/
+
+#include "config.h"
 
 #include "meshgenerator.h"
 
@@ -42,7 +44,7 @@ namespace Avogadro {
     m_reverseWinding(false),
     m_cube(0),
     m_mesh(0),
-    m_stepSize(0.0),
+    m_spacing(0.0,0.0,0.0),
     m_min(0.0, 0.0, 0.0),
     m_dim(0,0,0),
     m_progmin(0),
@@ -52,7 +54,7 @@ namespace Avogadro {
 
   MeshGenerator::MeshGenerator(const Cube *cube, Mesh *mesh,
     float iso, bool reverse, QObject *parent) : QThread(parent), m_iso(0.0),
-    m_reverseWinding(reverse), m_cube(0), m_mesh(0), m_stepSize(0.0),
+    m_reverseWinding(reverse), m_cube(0), m_mesh(0), m_spacing(0.0,0.0,0.0),
     m_min(0.0, 0.0, 0.0), m_dim(0,0,0)
   {
     initialize(cube, mesh, iso);
@@ -75,7 +77,7 @@ namespace Avogadro {
       qDebug() << "Cannot get a read lock...";
       return false;
     }
-    m_stepSize = m_cube->spacing().x();
+    m_spacing = m_cube->spacing().cast<float>();
     m_min = m_cube->min().cast<float>();
     m_dim = m_cube->dimensions();
     m_progmax = m_dim.x();
@@ -131,7 +133,7 @@ namespace Avogadro {
     m_iso = 0.0;
     m_cube =0;
     m_mesh = 0;
-    m_stepSize = 0.0;
+    m_spacing *= 0.0;
     m_min.setZero();
     m_dim.setZero();
     m_progmin = 0;
@@ -170,9 +172,9 @@ namespace Avogadro {
     Vector3f asEdgeNorm[12];
 
     // Calculate the position in the Cube
-    Vector3f fPos(pos.x() * m_stepSize + m_min.x(),
-                  pos.y() * m_stepSize + m_min.y(),
-                  pos.z() * m_stepSize + m_min.z());
+    Vector3f fPos(pos.x() * m_spacing.x() + m_min.x(),
+                  pos.y() * m_spacing.y() + m_min.y(),
+                  pos.z() * m_spacing.z() + m_min.z());
 
     //Make a local copy of the values at the cube's corners
     for(int i = 0; i < 8; ++i) {
@@ -205,11 +207,11 @@ namespace Avogadro {
 
         asEdgeVertex[i] = Vector3f(
           fPos.x() + (a2fVertexOffset[a2iEdgeConnection[i][0]][0]
-                      + fOffset * a2fEdgeDirection[i][0]) * m_stepSize,
+                      + fOffset * a2fEdgeDirection[i][0]) * m_spacing.x(),
           fPos.y() + (a2fVertexOffset[a2iEdgeConnection[i][0]][1]
-                      + fOffset * a2fEdgeDirection[i][1]) * m_stepSize,
+                      + fOffset * a2fEdgeDirection[i][1]) * m_spacing.y(),
           fPos.z() + (a2fVertexOffset[a2iEdgeConnection[i][0]][2]
-                      + fOffset * a2fEdgeDirection[i][2]) * m_stepSize);
+                      + fOffset * a2fEdgeDirection[i][2]) * m_spacing.z());
 
         /// FIXME Optimize this to only calculate normals when required
         asEdgeNorm[i] = normal(asEdgeVertex[i]);

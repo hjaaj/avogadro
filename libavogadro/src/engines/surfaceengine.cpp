@@ -6,7 +6,7 @@
   Copyright (C) 2008 Tim Vandermeersch
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -490,11 +490,13 @@ namespace Avogadro {
                                                     qulonglong(FALSE_ID)).toInt());
       m_mesh2 = m_molecule->meshById(settings.value("mesh2Id",
                                                     qulonglong(FALSE_ID)).toInt());
-      Cube *cube = m_molecule->cubeById(m_mesh1->cube());
-      m_min = cube->min();
-      m_max = cube->max();
-      if (m_mesh1->colors().size() == 0)
-        m_colored = false;
+      if (m_mesh1) {
+        Cube *cube = m_molecule->cubeById(m_mesh1->cube());
+        m_min = cube->min();
+        m_max = cube->max();
+        if (m_mesh1->colors().size() == 0)
+          m_colored = false;
+      }
     }
   }
 

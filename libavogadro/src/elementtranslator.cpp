@@ -4,7 +4,7 @@
   Copyright (C) 2007,2012 Geoffrey R. Hutchison
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -373,22 +373,22 @@ namespace Avogadro {
       result = tr("Copernicium");
       break;
     case 113:
-      result = tr("Ununtrium");
+      result = tr("Nihonium");
       break;
     case 114:
       result = tr("Flerovium");
       break;
     case 115:
-      result = tr("Ununpentium");
+      result = tr("Moscovium");
       break;
     case 116:
       result = tr("Livermorium");
       break;
     case 117:
-      result = tr("Ununseptium");
+      result = tr("Tennessine");
       break;
     case 118:
-      result = tr("Ununoctium");
+      result = tr("Oganesson");
       break;
 
     default:

@@ -6,7 +6,7 @@
   Copyright (C) 2008 Tim Vandermeersch
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -73,7 +73,8 @@ namespace Avogadro {
       /*! Handle a mouse move (perhaps drawing a bond)
       */
       virtual QUndoCommand* mouseMoveEvent(GLWidget *widget, QMouseEvent *event);
-      virtual QUndoCommand* mouseDoubleClickEvent(GLWidget *widget, QMouseEvent *event) { return 0; }
+      virtual QUndoCommand* mouseDoubleClickEvent(GLWidget *, QMouseEvent *) { return 0; }
+
       /*! Handle a scroll wheel (i.e., zooming in and out of the canvas)
       */
       virtual QUndoCommand* wheelEvent(GLWidget *widget, QWheelEvent *event);

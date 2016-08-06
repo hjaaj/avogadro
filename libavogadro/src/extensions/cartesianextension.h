@@ -5,7 +5,7 @@
   Based on code written by Tim Vandermeersch and Geoffrey R. Hutchison
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Some code is based on Open Babel
   For more information, see <http://openbabel.sourceforge.net/>
@@ -99,6 +99,10 @@ namespace Avogadro {
     CoordinateFormat m_format;
     SortingType m_sort;
     bool m_illegalInput;
+    QColor m_defaultTextColor;
+    QColor m_alternateTextColor;
+    QColor m_defaultBackgroundColor;
+    QColor m_alternateBackgroundColor;
   };
 
   class CartesianExtension : public Extension

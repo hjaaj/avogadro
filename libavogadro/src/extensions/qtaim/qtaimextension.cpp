@@ -4,7 +4,7 @@
 
   Copyright (C) 2010 Eric C. Brown
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -28,6 +28,8 @@
 #include <avogadro/atom.h>
 #include <avogadro/bond.h>
 #include <avogadro/painter.h>
+#include <avogadro/toolgroup.h>
+#include <avogadro/engine.h>
 
 #include <QAction>
 
@@ -64,19 +66,19 @@ namespace Avogadro
   {
     // create an action for our first action
     QAction *action = new QAction( this );
-    action->setText( tr("Molecular Graph" ));
+    action->setText( tr("Molecular Graph..." ));
     m_actions.append( action );
     action->setData( FirstAction );
 
     // create an action for our second action
     action = new QAction( this );
-    action->setText( tr("Molecular Graph with Lone Pairs" ));
+    action->setText( tr("Molecular Graph with Lone Pairs..." ));
     m_actions.append( action );
     action->setData( SecondAction );
 
     // create an action for our third action
     action = new QAction( this );
-    action->setText( tr("Atomic Charge" ));
+    action->setText( tr("Atomic Charge..." ));
     m_actions.append( action );
     action->setData( ThirdAction );
   }
@@ -118,9 +120,8 @@ namespace Avogadro
     m_molecule = molecule;
   }
 
-  QUndoCommand* QTAIMExtension::performAction(QAction *action, GLWidget *)
+  QUndoCommand* QTAIMExtension::performAction(QAction *action, GLWidget *widget)
   {
-
     bool wavefunctionAlreadyLoaded;
 
     if( m_molecule->property("QTAIMComment").isValid() )
@@ -160,6 +161,11 @@ namespace Avogadro
     // Instantiate a Wavefunction
     bool success;
     QTAIMWavefunction wfn;
+
+    // Create a new molecule, and then set that when ready.
+    Molecule *oldMol = m_molecule;
+    m_molecule = new Molecule;
+
     if( wavefunctionAlreadyLoaded )
     {
       success=wfn.initializeWithMoleculeProperties(m_molecule);
@@ -182,7 +188,15 @@ namespace Avogadro
         return 0;
     }
 
-    m_molecule->clear();
+    if (widget) {
+      widget->toolGroup()->setActiveTool("Navigate");
+      // Make sure QTAIM engine is turned on too
+
+      foreach (Engine *engine, widget->engines()) {
+        if (engine->identifier() == "QTAIM")
+          engine->setEnabled(true);
+      }
+    }
 
     // Instantiate an Evaluator
     QTAIMWavefunctionEvaluator eval(wfn);
@@ -353,8 +367,6 @@ namespace Avogadro
         m_molecule->setProperty("QTAIMXBondPaths",xBondPathsVariantList);
         m_molecule->setProperty("QTAIMYBondPaths",yBondPathsVariantList);
         m_molecule->setProperty("QTAIMZBondPaths",zBondPathsVariantList);
-
-        m_molecule->update();
       }
       break;
     case SecondAction: // Molecular Graph with Lone Pairs
@@ -410,8 +422,6 @@ namespace Avogadro
           atom->setPos( Eigen::Vector3d(x,y,z) );
           atom->setAtomicNumber(Z);
         }
-
-        m_molecule->update();
 
         // Locate the Bond Critical Points and Trace Bond Paths
         cpl.locateBondCriticalPoints();
@@ -523,8 +533,6 @@ namespace Avogadro
         m_molecule->setProperty("QTAIMYBondPaths",yBondPathsVariantList);
         m_molecule->setProperty("QTAIMZBondPaths",zBondPathsVariantList);
 
-        m_molecule->update();
-
         // Locate Electron Density Sources / Lone Pairs
 
         cpl.locateElectronDensitySources();
@@ -551,9 +559,6 @@ namespace Avogadro
         m_molecule->setProperty("QTAIMXElectronDensitySources",xElectronDensitySourcesVariantList);
         m_molecule->setProperty("QTAIMYElectronDensitySources",yElectronDensitySourcesVariantList);
         m_molecule->setProperty("QTAIMZElectronDensitySources",zElectronDensitySourcesVariantList);
-
-        m_molecule->update();
-
       }
       break;
     case ThirdAction:
@@ -611,8 +616,6 @@ namespace Avogadro
           atom->setAtomicNumber(Z);
         }
 
-        m_molecule->update();
-
         // Locate the Bond Critical Points and Trace Bond Paths
         cpl.locateBondCriticalPoints();
 
@@ -723,8 +726,6 @@ namespace Avogadro
         m_molecule->setProperty("QTAIMYBondPaths",yBondPathsVariantList);
         m_molecule->setProperty("QTAIMZBondPaths",zBondPathsVariantList);
 
-        m_molecule->update();
-
         // Electron Density
         qint64 mode=0;
 
@@ -759,7 +760,9 @@ namespace Avogadro
       }
       break;
     }
-
+    emit moleculeChanged(m_molecule,
+                         Extension::DeleteOld | Extension::NewWindow);
+    oldMol->deleteLater();
     return 0;
   }
 

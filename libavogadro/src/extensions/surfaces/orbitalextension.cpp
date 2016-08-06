@@ -6,7 +6,6 @@
 
   This file is part of the Avogadro molecular editor project.
   For more information, see <http://avogadro.openmolecules.net/>
-
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
@@ -88,8 +87,9 @@ namespace Avogadro
   QDockWidget * OrbitalExtension::dockWidget()
   {
     if (!m_dock) {
-      m_dock = new OrbitalDock( tr("Orbitals"),
-                                qobject_cast<QWidget *>(parent()) );
+//      m_dock = new OrbitalDock( tr("Orbitals"),
+//                                qobject_cast<QWidget *>(parent()) );
+      m_dock = new QDockWidget( tr("Orbitals"));
       m_dock->setObjectName("orbitalDock");
       if (!m_widget) {
         m_widget = new OrbitalWidget(m_dock);
@@ -110,7 +110,6 @@ namespace Avogadro
   void OrbitalExtension::setMolecule(Molecule *molecule)
   {
     m_molecule = molecule;
-
     // Stuff we manage that will not be valid any longer
     m_queue.clear();
     m_currentRunningCalculation = -1;
@@ -122,9 +121,18 @@ namespace Avogadro
 
     loadBasis();
 
-    if (!m_basis || m_basis->numElectrons() == 0)
-      return; // no electrons, no orbitals
+    if (!m_basis || m_basis->numElectrons() == 0) {
+        if (m_dock) {
+          m_widget->setEnabled(false);
+          QList<Orbital> list;
+          list.clear();
+          m_widget->fillTable(list);
 
+          if (m_dock->toggleViewAction()->isChecked())
+            m_dock->toggleViewAction()->activate(QAction::Trigger);
+        }
+      return; // no electrons, no orbitals, no orbital widget
+    }
     // Show dock
     if (m_dock &&
         molecule &&
@@ -154,7 +162,7 @@ namespace Avogadro
       if (property.isValid())
         alphaSymmetries = property.toStringList();
 
-      for (int i = 0; i < m_basis->numMOs(); i++) {
+      for (size_t i = 0; i < m_basis->numMOs(); i++) {
         QString num = "";
         if (i+1 != homo && i+1 != lumo) {
           num = (leqHOMO) ? "-" : "+";
@@ -171,12 +179,12 @@ namespace Avogadro
 
         Orbital orb;
         // Get the energy from the molecule property list, if available
-        if (alphaEnergies.size() > i)
+        if (static_cast<size_t>(alphaEnergies.size()) > i)
           orb.energy = alphaEnergies[i].toDouble();
         else
           orb.energy = 0.0;
         // symmetries (if available)
-        if (alphaSymmetries.size() > i)
+        if (static_cast<size_t>(alphaSymmetries.size()) > i)
           orb.symmetry = alphaSymmetries[i];
         orb.index = i;
         orb.description = desc;
@@ -421,19 +429,19 @@ namespace Avogadro
       int endIndex =  (m_widget->precalcLimit())
           ? homo + (m_widget->precalcRange()/2) - 1
           : m_basis->numMOs();
-      if (endIndex > m_basis->numMOs() - 1) {
+      if (endIndex > static_cast<int>(m_basis->numMOs() - 1)) {
         endIndex = m_basis->numMOs() - 1;
       }
 
-      for (unsigned int i = startIndex; i <= endIndex; i++) {
+      for (int i = startIndex; i <= endIndex; i++) {
         addCalculationToQueue(i+1,  // orbital
                               OrbitalWidget::OrbitalQualityToDouble(m_widget->defaultQuality()),
                               m_widget->isovalue(),
                               priority);
 
         // Update priority. Stays the same when i = homo.
-        if ( i + 1 < homo ) priority--;
-        else if ( i + 1 > homo) priority++;
+        if ( i + 1 < static_cast<int>(homo) ) priority--;
+        else if ( i + 1 > static_cast<int>(homo)) priority++;
       }
     }
     checkQueue();

@@ -4,7 +4,7 @@
   Copyright (C) 2007-2009 Marcus D. Hanwell
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
  **********************************************************************/
+
+#include "config.h"
 
 #include "povpainter.h"
 
@@ -399,9 +401,7 @@ namespace Avogadro
                                      double aspectRatio,
                                      const GLWidget* glwidget)
   {
-    m_painter = 0;
     m_output = 0;
-    m_file = 0;
     m_aspectRatio = aspectRatio;
     m_glwidget = glwidget;
     m_painter = new POVPainter;
@@ -425,6 +425,7 @@ namespace Avogadro
     delete m_output;
     m_output = 0;
     delete m_file;
+    delete m_painter;
   }
 
   void POVPainterDevice::initializePOV()

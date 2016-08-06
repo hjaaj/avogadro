@@ -4,7 +4,7 @@
   Copyright (C) 2009 by Geoffrey R. Hutchison
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Some code is based on Open Babel
   For more information, see <http://openbabel.sourceforge.net/>
@@ -36,6 +36,7 @@
 
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
+#include <QtNetwork/QSslSocket>
 
 using namespace OpenBabel;
 
@@ -98,6 +99,8 @@ namespace Avogadro {
       m_network = new QNetworkAccessManager(this);
       connect(m_network, SIGNAL(finished(QNetworkReply*)),
               this, SLOT(replyFinished(QNetworkReply*)));
+      connect(m_network, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)),
+              this, SLOT(printSslErrors(QNetworkReply*, const QList<QSslError>&)));
     }
 
     connect(m_molecule, SIGNAL(moleculeChanged()), this, SLOT(update()));
@@ -207,8 +210,23 @@ namespace Avogadro {
       m_molecule->setProperty("name", QVariant()); // set an invalid name, since we don't have one
   }
 
+  void MolecularPropertiesExtension::printSslErrors(
+                                                QNetworkReply*,
+                                                const QList<QSslError> &errors)
+  {
+    foreach(const QSslError &error, errors) {
+      qDebug() << tr("SSL Error: %1").arg(error.errorString());
+    }
+  }
+
   void MolecularPropertiesExtension::replyFinished(QNetworkReply *reply)
   {
+    // Print error messages
+    if (reply->error() != QNetworkReply::NoError) {
+      qDebug() << tr("Network Error: %1").arg(reply->errorString());
+      return;
+    }
+
     // Read in all the data
     if (!reply->isReadable()) {
       QMessageBox::warning(qobject_cast<QWidget*>(parent()),
@@ -258,7 +276,7 @@ namespace Avogadro {
 
     m_inchi = inchi; // cache for next use
 
-    QString requestURL = QLatin1String("http://cactus.nci.nih.gov/chemical/structure/") + m_inchi + QLatin1String("/iupac_name");
+    QString requestURL = QLatin1String("https://cactus.nci.nih.gov/chemical/structure/") + m_inchi + QLatin1String("/iupac_name");
     qDebug() << " requesting URL: " << requestURL;
 
     m_network->get(QNetworkRequest(QUrl(requestURL)));
@@ -270,4 +288,3 @@ namespace Avogadro {
 
 Q_EXPORT_PLUGIN2(molecularpropextension,
                  Avogadro::MolecularPropertiesExtensionFactory)
-

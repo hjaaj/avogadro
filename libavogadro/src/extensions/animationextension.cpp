@@ -4,7 +4,7 @@
   Copyright (C) 2008 by Tim Vandermeersch
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Some code is based on Open Babel
   For more information, see <http://openbabel.sourceforge.net/>
@@ -18,6 +18,8 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
  ***********************************************************************/
+
+#include "config.h"
 
 #include "animationextension.h"
 #include "trajvideomaker.h"

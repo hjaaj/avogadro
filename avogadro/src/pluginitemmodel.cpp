@@ -4,7 +4,7 @@
   Copyright (C) 2007 Donald Ephraim Curtis
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -123,7 +123,7 @@ namespace Avogadro {
   PluginItem *PluginItemModel::plugin ( const QModelIndex & index ) const
   {
     if(!index.isValid() || !index.internalPointer()) {
-      return false;
+      return 0;
     }
 
     PluginItem *plugin = static_cast<PluginItem *>(index.internalPointer());

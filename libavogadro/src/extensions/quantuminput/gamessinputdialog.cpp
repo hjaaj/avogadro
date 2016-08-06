@@ -5,7 +5,7 @@
   Copyright (C) 2006 by Geoffrey R. Hutchison
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Some code is based on Open Babel
   For more information, see <http://openbabel.sourceforge.net/>
@@ -741,17 +741,8 @@ namespace Avogadro {
     ui.miscRPACCheck->setChecked( m_inputData->Control->GetRPAC() );
 
     int force = m_inputData->Control->GetFriend();
-    if (( m_inputData->Control->GetExeType() != 1 ) &&
-        ( force == Friend_None ) )
-    {
-      ui.miscAIMPACCheck->setEnabled( true );
-      ui.miscRPACCheck->setEnabled( true );
-    }
-    else
-    {
-      ui.miscAIMPACCheck->setEnabled( true );
-      ui.miscRPACCheck->setEnabled( true );
-    }
+    ui.miscAIMPACCheck->setEnabled( true );
+    ui.miscRPACCheck->setEnabled( true );
 
     QRadioButton *forceButton =
       qobject_cast<QRadioButton *>( m_miscForceButtons->button( force ) );

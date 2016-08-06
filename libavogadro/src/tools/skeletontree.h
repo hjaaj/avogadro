@@ -9,7 +9,7 @@
   Revisions to use Eigen/Geometry directly, rather than home-grown Quaternions
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -29,6 +29,8 @@
 
 #ifndef SKELETONTREE_H
 #define SKELETONTREE_H
+
+#include "config.h"
 
 #include <QObject>
 #include <QList>

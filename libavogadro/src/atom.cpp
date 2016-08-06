@@ -6,7 +6,7 @@
   Copyright (c) 2010 Konstantin Tokarev
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -330,6 +330,7 @@ namespace Avogadro {
      obatom.SetAtomicNum(m_atomicNumber);
      obatom.SetPartialCharge(d->partialCharge);
      obatom.SetFormalCharge(d->formalCharge);
+     obatom.SetId(m_id);
 
      // Save custom label
      if (!d->customLabel.isEmpty()) {

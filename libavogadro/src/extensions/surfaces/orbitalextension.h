@@ -4,7 +4,7 @@
   Copyright (C) 2010 David C. Lonie
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -167,7 +167,7 @@ namespace Avogadro
 
   private:
 
-    OrbitalDock *m_dock;
+    QDockWidget *m_dock;
     OrbitalWidget *m_widget;
     QMutex *m_runningMutex;
 

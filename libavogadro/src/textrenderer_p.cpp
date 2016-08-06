@@ -5,7 +5,7 @@
   Copyright (C) 2007 Benoit Jacob
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -212,7 +212,11 @@ namespace Avogadro {
     //     much it is surrounded by other pixels.
 
     int *neighborhood = new int[ texwidth * texheight ];
-    if( ! neighborhood ) return false;
+    if( ! neighborhood )
+    {
+      delete [] rawbitmap;
+      return false;
+    }
     for( int i = 0; i < texheight * texwidth; i++)
       neighborhood[i] = 0;
 
@@ -244,9 +248,21 @@ namespace Avogadro {
     //     alpha channel is a bit more involved and uses the neighborhood map.
 
     GLubyte *glyphbitmap = new GLubyte[ texwidth * texheight ];
-    if( ! glyphbitmap ) return false;
+    if( ! glyphbitmap )
+    {
+      delete [] rawbitmap;
+      delete [] neighborhood;
+      return false;
+    }
     GLubyte *outlinebitmap = new GLubyte[ texwidth * texheight ];
-    if( ! outlinebitmap ) return false;
+    if( ! outlinebitmap )
+    {
+      delete [] rawbitmap;
+      delete [] neighborhood;
+      delete [] outlinebitmap;
+      delete [] glyphbitmap;
+      return false;
+    }
 
     for( int n = 0; n < texwidth * texheight; n++ )
     {
@@ -264,9 +280,17 @@ namespace Avogadro {
     // *** STEP 5 : pass the final bitmap to OpenGL for texturing ***
 
     glGenTextures( 1, &m_glyphTexture );
-    if( ! m_glyphTexture ) return false;
+    if( ! m_glyphTexture )
+    {
+      delete [] glyphbitmap;
+      return false;
+    }
     glGenTextures( 1, &m_outlineTexture );
-    if( ! m_outlineTexture ) return false;
+    if( ! m_outlineTexture )
+    {
+      delete [] glyphbitmap;
+      return false;
+    }
 
     glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
 

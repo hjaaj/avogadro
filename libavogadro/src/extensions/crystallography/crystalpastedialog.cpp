@@ -4,7 +4,7 @@
   Copyright (C) 2011 by David C. Lonie
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   This source code is released under the New BSD License, (the "License").
 
@@ -433,6 +433,15 @@ namespace Avogadro {
            it != it_end; ++it) {
         *it = OB2Eigen(cell->FractionalToCartesian
                        (Eigen2OB(*it)));
+      }
+    }
+    // If cartesian, we need to scale the atoms with the scaling factor
+    else {
+      for (QList<Eigen::Vector3d>::iterator
+             it = positions.begin(),
+             it_end = positions.end();
+           it != it_end; ++it) {
+        *it *= scale;
       }
     }
 

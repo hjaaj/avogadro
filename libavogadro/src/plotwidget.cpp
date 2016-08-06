@@ -5,7 +5,7 @@
   Copyright (C) 2008 David Lonie <loniedavid@gmail.com> (Avogadro)
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   This file is based on KPlotWidget from the KDE library. For more
   information see <http://www.kde.org/>
@@ -674,11 +674,9 @@ namespace Avogadro {
       QPointF pF 	= mapToWidget(mapFrameToData(event->pos()));
       QPoint p_widget 	( static_cast<int>(pF.x()), static_cast<int>(pF.y()));
       PlotPoint *p 	= pointNearestPoint(p_widget);
-      PlotPoint *old;
 
       if (p) { // Make sure p isn't null...
         if (d->mousefollow->points().size() != 0) {
-          old 	= d->mousefollow->at(0);
           d->mousefollow->clearPoints();
         }
         d->mousefollow->addPoint(p->x(), p->y());

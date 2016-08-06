@@ -5,7 +5,7 @@
   Based on code written by Tim Vandermeersch and Geoffrey R. Hutchison
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Some code is based on Open Babel
   For more information, see <http://openbabel.sourceforge.net/>
@@ -52,15 +52,19 @@ namespace Avogadro
   static const QString EDITOR_FONT = "Courier";
 #endif
 
-  CartesianEditor::CartesianEditor(QWidget *parent) : QDialog(parent),
-                                                      m_unit(CoordinateUnit(0)),
-                                                      m_format(CoordinateFormat(0)),
-                                                      m_illegalInput(false)
+  CartesianEditor::CartesianEditor(QWidget *parent)
+    : QDialog(parent),
+      m_unit(CoordinateUnit(0)),
+      m_format(CoordinateFormat(0)),
+      m_illegalInput(false),
+      m_defaultTextColor(palette().color(QPalette::Text)),
+      m_alternateTextColor(Qt::red),
+      m_defaultBackgroundColor(palette().color(QPalette::Base)),
+      m_alternateBackgroundColor(Qt::white)
   {
     setupUi(this);
     readSettings();
 
-    cartesianEdit->setTextColor(Qt::black);
     cartesianEdit->setCurrentFont(QFont(EDITOR_FONT,
                                         QApplication::font().pointSize() + 1));
 
@@ -139,7 +143,8 @@ namespace Avogadro
   {
     if (m_illegalInput) {
       m_illegalInput = false;
-      cartesianEdit->setTextColor(Qt::black);
+      cartesianEdit->setTextColor(m_defaultTextColor);
+      cartesianEdit->setTextBackgroundColor(m_defaultBackgroundColor);
       QString t = cartesianEdit->toPlainText();
       cartesianEdit->setText(t);
     }
@@ -158,7 +163,8 @@ namespace Avogadro
       m_molecule->update();
       updateCoordinates();
     } else {
-      cartesianEdit->setTextColor(Qt::red);
+      cartesianEdit->setTextColor(m_alternateTextColor);
+      cartesianEdit->setTextBackgroundColor(m_alternateBackgroundColor);
       QString t = cartesianEdit->toPlainText();
       cartesianEdit->setText(t);
       m_illegalInput = true;
@@ -196,7 +202,6 @@ namespace Avogadro
     // Format definition, will be used for parsing
     int NameCol=-1, Xcol=-1, Ycol=-1, Zcol=-1;
     QString format("");
-    int a;
     double b;
     bool ok;
     for (int i=0; i<data.size(); i++) {
@@ -204,7 +209,7 @@ namespace Avogadro
         continue;
       }
 
-      a = data.at(i).toInt(&ok);
+      data.at(i).toInt(&ok);
       if (ok) {
         format += "i";
         continue;
@@ -363,7 +368,8 @@ namespace Avogadro
   void CartesianEditor::updateCoordinates()
   {
     m_illegalInput = false;
-    cartesianEdit->setTextColor(Qt::black);
+    cartesianEdit->setTextColor(m_defaultTextColor);
+    cartesianEdit->setTextBackgroundColor(m_defaultBackgroundColor);
     QString t = cartesianEdit->toPlainText();
     cartesianEdit->setText(t);
 
@@ -404,7 +410,7 @@ namespace Avogadro
         }
 
         it=tmpMap.constBegin();
-        for (int i=0; it !=tmpMap.constEnd(); i++,it++ )
+        for (int i=0; it !=tmpMap.constEnd(); i++,++it )
           localAtom.push_back(it.value());
 
         matrix3x3 xform;

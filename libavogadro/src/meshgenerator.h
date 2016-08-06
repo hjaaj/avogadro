@@ -4,7 +4,7 @@
   Copyright (C) 2008-2009 by Marcus D. Hanwell
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU Lesser General Public License as published by
@@ -24,6 +24,8 @@
 
  #ifndef MESHGENERATOR_H
  #define MESHGENERATOR_H
+
+#include "config.h"
 
 #include <avogadro/global.h>
 
@@ -151,13 +153,13 @@
      */
     bool marchingCube(const Eigen::Vector3i &pos);
 
-    float m_iso;           /** The value of the isosurface. */
-    bool m_reverseWinding; /** Whether the winding and normals are reversed */
-    const Cube *m_cube;    /** The cube that we are generating a Mesh from. */
-    Mesh *m_mesh;          /** The mesh that is being generated. */
-    float m_stepSize;      /** The step size of the cube. */
-    Eigen::Vector3f m_min; /** The minimum point in the cube. */
-    Eigen::Vector3i m_dim; /** The dimensions of the cube. */
+    float m_iso;               /** The value of the isosurface.                 */
+    bool m_reverseWinding;     /** Whether the winding and normals are reversed */
+    const Cube *m_cube;        /** The cube that we are generating a Mesh from. */
+    Mesh *m_mesh;              /** The mesh that is being generated.            */
+    Eigen::Vector3f m_spacing; /** The spacing of the cube.                     */
+    Eigen::Vector3f m_min;     /** The minimum point in the cube.               */
+    Eigen::Vector3i m_dim;     /** The dimensions of the cube.                  */
     std::vector<Eigen::Vector3f> m_vertices, m_normals;
     std::vector<unsigned int> m_indices;
     int m_progmin;

@@ -4,7 +4,7 @@
   Copyright (C) 2010 Eric C. Brown
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
 **********************************************************************/
+
+#include "config.h"
 
 #include "qtaimcriticalpointlocator.h"
 #include "qtaimwavefunction.h"
@@ -535,13 +537,17 @@ namespace Avogadro
 
       bool correctSignature = results.at(n).at(0).toBool();
 
-      QVector3D result(
+      if (correctSignature)
+      {
+
+        QVector3D result(
           results.at(n).at(1).toReal(),
           results.at(n).at(2).toReal(),
           results.at(n).at(3).toReal()
-          );
+        );
 
-      m_nuclearCriticalPoints.append( result );
+        m_nuclearCriticalPoints.append( result );
+      }
 
     }
 

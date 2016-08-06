@@ -8,7 +8,7 @@
   Copyright (C) 2011      David C. Lonie
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -762,8 +762,8 @@ namespace Avogadro {
 
     if (d->fogLevel) {
       glFogi(GL_FOG_MODE, GL_LINEAR);
-      GLfloat fogColor[4]= {d->background.redF(), d->background.greenF(),
-                            d->background.blueF(), d->background.alphaF()};
+      GLfloat fogColor[4]= {static_cast<GLfloat>(d->background.redF()), static_cast<GLfloat>(d->background.greenF()),
+                            static_cast<GLfloat>(d->background.blueF()), static_cast<GLfloat>(d->background.alphaF())};
       glFogfv(GL_FOG_COLOR, fogColor);
       Vector3d distance = camera()->modelview() * d->center;
       double distanceToCenter = distance.norm();
@@ -977,11 +977,11 @@ namespace {
   // http://bytes.com/topic/c/answers/621985-print-binary-representation
   char* debug16bit(const quint16 x) {
     static char buff[sizeof(quint16) * CHAR_BIT + 1];
-    unsigned int i;
-    int j = sizeof(int) * CHAR_BIT - 1;
+    quint16 i;
+    quint16 j = sizeof(quint16) * CHAR_BIT - 1;
 
     buff[j] = 0;
-    for(i=0;i<sizeof(int) * CHAR_BIT; i++)
+    for(i=0;i<sizeof(quint16) * CHAR_BIT; i++)
       {
         if(x & (1 << i))
           buff[j] = '1';
@@ -2714,6 +2714,8 @@ namespace Avogadro {
     d->renderUnitCellAxes = settings.value("renderUnitCellAxes", 1).value<bool>();
     int pr = settings.value("projection", GLWidget::Perspective).toInt();
     // Makes the compiler happy about the type conversion.
+    if (pr != 1 && pr != 2)
+      pr = 1; // set a default if this is screwed up
     d->projection = GLWidget::ProjectionType(pr);
 
     loadEngines(settings);
@@ -2985,16 +2987,6 @@ static inline GLint gluProject(GLdouble objx, GLdouble objy, GLdouble objz,
     //QPaintEngine::Type oldEngineType = QGL::preferredPaintEngine();
     QPaintEngine *engine = paintEngine();
 
-    //if (engine && (oldEngineType == QPaintEngine::OpenGL2) && engine->isActive()) {
-    //    qWarning("QGLWidget::renderText(): Calling renderText() while a GL 2 paint engine is"
-    //             " active on the same device is not allowed.");
-    //    return;
-    //}
-
-    // this changes what paintEngine() returns
-    //QGL::setPreferredPaintEngine(QPaintEngine::OpenGL);
-    //qgl_engine_selector()->setPreferredPaintEngine(QPaintEngine::OpenGL);
-    engine = paintEngine();
     QPainter *p;
     bool reuse_painter = false;
     bool use_depth_testing = glIsEnabled(GL_DEPTH_TEST);

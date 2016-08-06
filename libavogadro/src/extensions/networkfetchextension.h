@@ -4,7 +4,7 @@
   Copyright (C) 2009 Marcus D. Hanwell
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -27,8 +27,11 @@
 
 #include <avogadro/extension.h>
 
+#include <QtCore/QUrl>
+
 class QNetworkAccessManager;
 class QNetworkReply;
+class QSslError;
 class QString;
 
 namespace Avogadro
@@ -85,10 +88,13 @@ namespace Avogadro
     Molecule *m_molecule;
     QNetworkAccessManager *m_network;
     QString *m_moleculeName;
+    QUrl m_urlRequest;
+    int m_redirects;
 
   private slots:
     void replyFinished(QNetworkReply*);
-
+    void printSslErrors(QNetworkReply *reply, const QList<QSslError> &errors);
+    QUrl checkRedirect(const QUrl& possibleRedirect, const QUrl& oldURL);
   };
 
   class NetworkFetchExtensionFactory : public QObject, public PluginFactory

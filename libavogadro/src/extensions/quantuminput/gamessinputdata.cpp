@@ -39,7 +39,7 @@ namespace Avogadro
       if ( pos>=bytecount ) return -1;
       if ( Buffer[pos]=='\0' ) return -1;
       test = 2;
-      while (( Buffer[pos+test] == KeyWord[test] )&&( test<length ) ) test++;
+      while (( test<length ) && ( Buffer[pos+test] == KeyWord[test] ) ) test++;
       test = ( long ) test==length;
     }
     return pos;
@@ -230,9 +230,8 @@ long GamessInputData::GetNumElectrons() const
 long GamessInputData::WriteInputFile( ostream &buffer )
 {
 
-  long BasisTest=0;
   buffer << "!   File created by the GAMESS Input Deck Generator Plugin for Avogadro" << endl;
-  if ( Basis ) BasisTest = Basis->WriteToFile( buffer, this );
+  if ( Basis ) Basis->WriteToFile( buffer, this );
   if ( Control ) Control->WriteToFile( buffer, this, GetNumElectrons() );
   if ( DFT ) DFT->WriteToFile( buffer, this );
   if ( System ) System->WriteToFile( buffer );
@@ -265,7 +264,7 @@ void GamessEFPGroup::GetCenterOfMass( Molecule *molecule, double &x, double &y, 
   sum[1] = 0.0;
   sum[2] = 0.0;
 
-  for ( std::vector<Atom *>::iterator i = atoms.begin(); i != atoms.end(); i++ ) {
+  for ( std::vector<Atom *>::iterator i = atoms.begin(); i != atoms.end(); ++i ) {
     Atom *atom = *i;
 
     double m = atom->OBAtom().GetAtomicMass();
@@ -285,7 +284,7 @@ void GamessEFPGroup::GetCenterOfMass( Molecule *molecule, double &x, double &y, 
 
 bool GamessEFPGroup::Contains(Atom *atom)
 {
-  for ( std::vector<Atom *>::iterator i = atoms.begin(); i != atoms.end(); i++ ) {
+  for ( std::vector<Atom *>::iterator i = atoms.begin(); i != atoms.end(); ++i ) {
     if(atom == *i)
     {
       return true;
@@ -340,12 +339,12 @@ void GamessEFPData::RemoveGroups( Atom *atom )
         m_efpCount--;
       }
       delete (*iter);
-      m_groups.erase( (iter) );
+      iter = m_groups.erase( (iter) );
     }
     else
     {
       // if we remove it automatically increments
-      iter++;
+      ++iter;
     }
   }
 }
@@ -353,9 +352,9 @@ void GamessEFPData::RemoveGroups( Atom *atom )
 void GamessEFPData::RemoveGroup( GamessEFPGroup *group )
 {
   std::vector<GamessEFPGroup *>::iterator iter;
-  for ( iter = m_groups.begin(); iter != m_groups.end(); iter++ ) {
+  for ( iter = m_groups.begin(); iter != m_groups.end(); ++iter ) {
     if ( *iter == group ) {
-      m_groups.erase( iter );
+      iter = m_groups.erase( iter );
     }
   }
 }
@@ -806,8 +805,7 @@ bool GamessControlGroup::UseDFT( bool State )
 }
 bool GamessControlGroup::UseDFT( void ) const
 {
-  bool result = false;
-  result = (( Options & ( 1<<4 ) )?true:false );
+  bool result = (( Options & ( 1<<4 ) )?true:false );
   if ( GetSCFType() > 3 ) result = false;
   if ( GetMPLevel() > 0 ) result = false;
   if ( GetCIType() > 0 ) result = false;
@@ -1653,8 +1651,8 @@ short GamessDataGroup::SetTitle( const char *NewTitle, long length )
 
   long TitleStart=0, TitleEnd=length-1, i, j;
   //Strip blanks of both ends of title
-  while (( NewTitle[TitleStart] <= ' ' )&&( TitleStart<length ) ) TitleStart ++;
-  while (( NewTitle[TitleEnd] <= ' ' )&&( TitleEnd>0 ) ) TitleEnd --;
+  while ( ( TitleStart<length )&&(NewTitle[TitleStart] <= ' ' ) ) TitleStart ++;
+  while (( TitleEnd>0 )&&( NewTitle[TitleEnd] <= ' ' ) ) TitleEnd --;
   length = TitleEnd - TitleStart + 1;
 
   if ( length <= 0 ) return 0;
@@ -1784,10 +1782,10 @@ void GamessDataGroup::WriteToFile( ostream &File, GamessInputData *IData, Molecu
 
   if ( IData->EFP->GetGroupCount() ) {
     // write out EFP info
-    for ( EFPGroupIter iter = IData->EFP->GetGroupBegin(); iter != IData->EFP->GetGroupEnd(); iter++ ) {
+    for ( EFPGroupIter iter = IData->EFP->GetGroupBegin(); iter != IData->EFP->GetGroupEnd(); ++iter ) {
       if (( *iter )->type != GamessEFPGroup::QMType ) { continue; }
 
-      for ( std::vector<Atom *>::iterator i = ( *iter )->atoms.begin(); i != ( *iter )->atoms.end(); i++ ) {
+      for ( std::vector<Atom *>::iterator i = ( *iter )->atoms.begin(); i != ( *iter )->atoms.end(); ++i ) {
         Atom *atom = *i;
 
         char atomicNumber = atom ->atomicNumber();
@@ -1806,7 +1804,7 @@ void GamessDataGroup::WriteToFile( ostream &File, GamessInputData *IData, Molecu
     File << " $EFRAG" << endl;
     File << "COORD=CART" << endl;
 
-    for ( EFPGroupIter iter = IData->EFP->GetGroupBegin(); iter != IData->EFP->GetGroupEnd(); iter++ ) {
+    for ( EFPGroupIter iter = IData->EFP->GetGroupBegin(); iter != IData->EFP->GetGroupEnd(); ++iter ) {
       if (( *iter )->type != GamessEFPGroup::EFPType ) { continue; }
 
       double com[3];
@@ -1821,7 +1819,7 @@ void GamessDataGroup::WriteToFile( ostream &File, GamessInputData *IData, Molecu
         dist[i] = 0.0;
       }
 
-      for ( std::vector<Atom *>::iterator idx = ( *iter )->atoms.begin(); idx != ( *iter )->atoms.end(); idx++ ) {
+      for ( std::vector<Atom *>::iterator idx = ( *iter )->atoms.begin(); idx != ( *iter )->atoms.end(); ++idx ) {
         Atom *atom = *idx;
 
         double atomPos[3];

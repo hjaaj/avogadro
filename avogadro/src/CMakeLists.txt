@@ -19,9 +19,18 @@ set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${OPENBABEL2_INCLUDE_DIR}
-  ${EIGEN2_INCLUDE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
 )
+
+if(EIGEN3_FOUND)
+	include_directories(
+		${EIGEN3_INCLUDE_DIR}
+	)
+elseif(EIGEN2_FOUND)
+	include_directories(
+		${EIGEN2_INCLUDE_DIR}
+	)
+endif(EIGEN3_FOUND)
 
 if(GLEW_FOUND)
   include_directories(${GLEW_INCLUDE_DIR})
@@ -107,6 +116,7 @@ if(QtTesting)
   target_link_libraries(avogadro-app QtTesting)
 endif()
 if(Q_WS_X11)
+  find_package(X11 REQUIRED)
   target_link_libraries(avogadro-app ${X11_X11_LIB})
 endif()
 

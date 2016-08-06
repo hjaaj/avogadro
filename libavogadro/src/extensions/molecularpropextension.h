@@ -4,7 +4,7 @@
   Copyright (C) 2009 by Geoffrey R. Hutchison
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Some code is based on Open Babel
   For more information, see <http://openbabel.sourceforge.net/>
@@ -36,6 +36,7 @@
 // Forward declarations
 class QNetworkAccessManager;
 class QNetworkReply;
+class QSslError;
 
 namespace Avogadro {
 
@@ -92,6 +93,7 @@ namespace Avogadro {
 
       private Q_SLOTS:
       void requestIUPACName();
+      void printSslErrors(QNetworkReply *reply, const QList<QSslError> &errors);
       void replyFinished(QNetworkReply*);
 
   };

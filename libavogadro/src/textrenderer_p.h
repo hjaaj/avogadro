@@ -5,7 +5,7 @@
   Copyright (C) 2007 Benoit Jacob
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -25,6 +25,8 @@
 
 #ifndef TEXTRENDERER_H
 #define TEXTRENDERER_H
+
+#include "config.h"
 
 #include <avogadro/global.h>
 #include <Eigen/Core>

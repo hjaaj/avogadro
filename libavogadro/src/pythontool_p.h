@@ -4,7 +4,7 @@
   Copyright (C) 2008,2009 Tim Vandermeersch
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,6 +24,10 @@
 
 #ifndef PYTHONTOOL_H
 #define PYTHONTOOL_H
+
+#ifdef Q_MOC_RUN
+#define BOOST_TT_HAS_OPERATOR_HPP_INCLUDED
+#endif
 
 #include <avogadro/global.h>
 #include <avogadro/tool.h>

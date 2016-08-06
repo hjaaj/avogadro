@@ -4,7 +4,7 @@
   Copyright (C) 2010 by David C. Lonie
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -112,6 +112,8 @@ namespace Avogadro {
   {
     // Sort list by orbital
     qSort(list.begin(), list.end(), orbitalIndexLessThan);
+
+    m_tableModel->clearOrbitals();
 
     // Populate the model
     for (int i = 0; i < list.size(); i++) {

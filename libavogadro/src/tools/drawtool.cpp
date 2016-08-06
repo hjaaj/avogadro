@@ -7,7 +7,7 @@
   Some Portions Copyright (C) 2007-2008 Geoffrey Hutchison
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,6 +24,8 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
  **********************************************************************/
+
+#include "config.h"
 
 #include "drawtool.h"
 #include "drawcommand.h"
@@ -443,6 +445,11 @@ namespace Avogadro {
                     adjEnd |= AdjustHydrogens::RemoveOnRedo | AdjustHydrogens::AddOnUndo;
                 }
               }
+            }
+            // if we're creating a bond to or from a hydrogen, do NOT adjust the hydrogens ever
+            if (m_bond->beginAtom()->isHydrogen() || m_bond->endAtom()->isHydrogen()) {
+              adjBegin = AdjustHydrogens::Never;
+              adjEnd = AdjustHydrogens::Never;
             }
           }
 

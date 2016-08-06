@@ -4,7 +4,7 @@
   Copyright (C) 2011 David C. Lonie
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   This source code is released under the New BSD License, (the "License").
 
@@ -14,6 +14,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
  **********************************************************************/
+
+#include "config.h"
 
 #include "swcntbuilderwidget.h"
 

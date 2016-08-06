@@ -4,7 +4,7 @@
   Copyright (C) 2010 Geoffrey R. Hutchison
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -152,7 +152,7 @@ namespace Avogadro {
         std::vector<std::vector<int> >::iterator match;
         for (match = mlist.begin(); match != mlist.end(); ++match) { // iterate through matches
           for (unsigned idx = 0; idx < (*match).size(); ++idx) { // iterate through atoms in match
-            if (atom->index() == ((*match)[idx] - 1)) { // TODO: OB uses index from 1
+            if (static_cast<int>(atom->index()) == ((*match)[idx] - 1)) { // TODO: OB uses index from 1
               matched = true;
               break;
             }

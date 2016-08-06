@@ -6,7 +6,7 @@
   Copyright (C) 2007-2009 by Marcus D. Hanwell
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Some code is based on Open Babel
   For more information, see <http://openbabel.sourceforge.net/>
@@ -1851,29 +1851,39 @@ protected:
   // Unfortunately Qt signals/slots doesn't let us pass an arbitrary URL to a slot
   // or we'd have one openURL("string")
   // Instead, we've got a bunch of one-line actions...
+  void MainWindow::openManualURL() const
+  {
+    QDesktopServices::openUrl(QUrl("http://manual.avogadro.cc/"));
+  }
+
+  void MainWindow::openForumURL() const
+  {
+    QDesktopServices::openUrl(QUrl("http://discuss.avogadro.cc/"));
+  }
+
   void MainWindow::openTutorialURL() const
   {
-    QDesktopServices::openUrl(QUrl("http://avogadro.openmolecules.net/wiki/Tutorials"));
+    QDesktopServices::openUrl(QUrl("http://avogadro.cc/tutorials"));
   }
 
   void MainWindow::openFAQURL() const
   {
-    QDesktopServices::openUrl(QUrl("http://avogadro.openmolecules.net/wiki/Avogadro:FAQ"));
+    QDesktopServices::openUrl(QUrl("http://avogadro.cc/FAQ"));
   }
 
   void MainWindow::openWebsiteURL() const
   {
-    QDesktopServices::openUrl(QUrl("http://avogadro.openmolecules.net/wiki/"));
+    QDesktopServices::openUrl(QUrl("http://avogadro.cc/"));
   }
 
   void MainWindow::openReleaseNotesURL() const
   {
-    QDesktopServices::openUrl(QUrl( "http://avogadro.openmolecules.net/wiki/Avogadro_" + QString(VERSION) ));
+    QDesktopServices::openUrl(QUrl( "http://avogadro.cc/Avogadro_" + QString(VERSION) ));
   }
 
   void MainWindow::openBugURL() const
   {
-    QDesktopServices::openUrl(QUrl("http://sourceforge.net/tracker/?group_id=165310&atid=835077"));
+    QDesktopServices::openUrl(QUrl("http://github.com/cryos/avogadro/issues"));
   }
 
   void MainWindow::setView(int index)
@@ -2036,14 +2046,13 @@ protected:
     // Format definition, will be used for parsing
     int NameCol=-1, Xcol=-1, Ycol=-1, Zcol=-1;
     QString format("");
-    int a;
     double b;
     bool ok;
     for (int i=0; i<data.size(); i++)
       {
         if (data.at(i) == "") continue;
 
-        a = data.at(i).toInt(&ok);
+        data.at(i).toInt(&ok);
         if (ok)
           {
             format += "i";
@@ -2146,8 +2155,8 @@ protected:
           return false;
         for (int i=0; i<s_data.size(); i++)
           {
-            double x, y, z;
-            int _n,_iso;
+            double x(0.0), y(0.0), z(0.0);
+            int _n(0),_iso;
             bool ok = true;
             if (i == Xcol)
               x = s_data.at(i).toDouble(&ok);
@@ -2224,9 +2233,7 @@ protected:
     // Sort lists
     QString curId;
     QStringList::iterator idit;
-    QStringList::iterator idit_end = ids->end();
     QList<Eigen::Vector3d>::iterator coordit;
-    QList<Eigen::Vector3d>::iterator coordit_end = coords->end();
     unsigned int sorted = 0;
     for (int uniqInd = 0; uniqInd < uniqueIds->size();
          ++uniqInd) {
@@ -2237,8 +2244,8 @@ protected:
       coordit = coords->begin() + sorted;
       while (found < count) {
         // Should never reach the end
-        Q_ASSERT(idit != idit_end);
-        Q_ASSERT(coordit != coordit_end);
+        Q_ASSERT(idit != ids->end());
+        Q_ASSERT(coordit != coords->end());
         if (idit->compare(curId) == 0) {
           qSwap(*idit, (*ids)[sorted]);
           qSwap(*coordit, (*coords)[sorted]);
@@ -2788,7 +2795,7 @@ protected:
     }
 
     // if smooth transitions are disabled, center now and return
-    if( !d->molecule->numAtoms() >= 1000 ) {
+    if( !d->molecule || d->molecule->numAtoms() >= 1000 ) {
       camera->setModelview(goal);
       d->glWidget->update();
       return;
@@ -2853,7 +2860,7 @@ protected:
     }
 
     // if smooth transitions are disabled, center now and return
-    if( !d->molecule->numAtoms() >= 1000 ) {
+    if( !d->molecule || d->molecule->numAtoms() >= 1000 ) {
       camera->setModelview(goal);
       d->glWidget->update();
       return;
@@ -2886,7 +2893,7 @@ protected:
 
   void MainWindow::showAndActivate()
   {
-    setWindowState(windowState() & ~Qt::WindowMinimized | Qt::WindowActive);
+    setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
     raise();
   }
 
@@ -3063,10 +3070,14 @@ protected:
     connect( ui.projectTreeView, SIGNAL(activated(const QModelIndex&)),
         this, SLOT(projectItemActivated(const QModelIndex&)));
 
+    connect( ui.actionAvogadro_Help, SIGNAL( triggered() ),
+             this, SLOT( openManualURL() ));
     connect( ui.actionTutorials, SIGNAL( triggered() ),
              this, SLOT( openTutorialURL() ));
     connect( ui.actionFAQ, SIGNAL( triggered() ),
              this, SLOT( openFAQURL() ) );
+    connect( ui.actionAvogadro_Forum, SIGNAL( triggered() ),
+             this, SLOT( openForumURL() ));
     connect( ui.actionRelease_Notes, SIGNAL( triggered() ),
              this, SLOT( openReleaseNotesURL() ));
     connect( ui.actionAvogadro_Website, SIGNAL( triggered() ),

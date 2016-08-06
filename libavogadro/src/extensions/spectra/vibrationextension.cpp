@@ -5,7 +5,7 @@
   Some portions Copyright (C) 2010 by Konstantin Tokarev
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Some code is based on Open Babel
   For more information, see <http://openbabel.sourceforge.net/>
@@ -86,7 +86,9 @@ namespace Avogadro {
   QDockWidget * VibrationExtension::dockWidget()
   {
     if (!m_dock) {
-      m_dock = new VibrationDock( tr("Vibrations"), qobject_cast<QWidget *>(parent()) );
+//      m_dock = new VibrationDock( tr("Vibrations"), qobject_cast<QWidget *>(parent()) );
+      m_dock = new QDockWidget( tr("Vibrations") );
+
       m_dock->setObjectName("vibrationDock");
       //qDebug() << "geom" << m_geometry.size();
       m_dock->restoreGeometry(m_geometry);

@@ -5,7 +5,7 @@
   Some portions (C) 2010 Konstantin Tokarev
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -41,9 +41,9 @@ using namespace OpenBabel;
 namespace Avogadro
 {
   MolproInputDialog::MolproInputDialog(QWidget *parent, Qt::WindowFlags f)
-    : InputDialog(parent, f), m_calculationType(OPT),
+    : InputDialog(parent, f), m_2009(false), m_calculationType(OPT),
     m_theoryType(RHF), m_basisType(B631Gd),
-    m_output(), m_coordType(CARTESIAN), m_dirty(false), m_warned(false), m_2009(false)
+    m_output(), m_coordType(CARTESIAN), m_dirty(false), m_warned(false)
   {
     ui.setupUi(this);
     // Connect the GUI elements to the correct slots

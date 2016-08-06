@@ -5,7 +5,7 @@
   Copyright (C) 2006 by Geoffrey R. Hutchison
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Some code is based on Open Babel
   For more information, see <http://openbabel.sourceforge.net/>
@@ -259,7 +259,7 @@ namespace Avogadro
       vector< vector<int> > maplist = sp.GetUMapList();
 
       for (vector< vector<int> >::iterator it1 = maplist.begin();
-           it1 != maplist.end(); it1++) {
+           it1 != maplist.end(); ++it1) {
 
         QVector<int> matches = QVector<int>::fromStdVector( *it1 );
 

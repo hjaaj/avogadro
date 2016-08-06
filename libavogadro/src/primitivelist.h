@@ -4,7 +4,7 @@
   Copyright (C) 2007 Donald Ephraim Curtis
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -143,7 +143,7 @@ namespace Avogadro
           lit = (*vit).constBegin();
           while(lit == (*vit).constEnd())
           {
-            vit++;
+            ++vit;
             if(vit != vl->constEnd())
             {
               lit = (*vit).constBegin();
@@ -166,10 +166,10 @@ namespace Avogadro
         {
           if(vit != vl->constEnd())
           {
-            lit++;
+            ++lit;
             while(lit == (*vit).constEnd())
             {
-              vit++;
+              ++vit;
 
               if(vit == vl->constEnd())
               {

@@ -5,7 +5,7 @@
   Copyright (C) 2008-2009 Marcus D. Hanwell
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -22,6 +22,8 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
  **********************************************************************/
+
+#include "config.h"
 
 #include "molecule.h"
 
@@ -777,26 +779,18 @@ namespace Avogadro{
     else {
       // Calculate a new estimate (e.g., the geometry changed
       Vector3d dipoleMoment(0.0, 0.0, 0.0);
-      // Use MMFF94 charges -- good estimate of dipole moment
-      OpenBabel::OBForceField *ff = OpenBabel::OBForceField::FindForceField("MMFF94")->MakeNewInstance();
-      OpenBabel::OBMol obmol = OBMol();
-      if (ff->Setup(obmol)) {
-        ff->GetPartialCharges(obmol);
-        for( OpenBabel::OBMolAtomIter atom(obmol); atom; ++atom ) {
-          OpenBabel::OBPairData *chg = (OpenBabel::OBPairData*) atom->GetData("FFPartialCharge");
-          if (chg)
-            dipoleMoment += Vector3d(atom->GetVector().AsArray()) * atof(chg->GetValue().c_str());
-        }
-        delete ff; // the new instance
-        dipoleMoment *= 3.60; // fit from regression, R^2 = 0.769
-      }
-      else {
-        foreach (Atom *a, atoms())
-          dipoleMoment += *a->pos() * a->partialCharge();
-      }
+
+      foreach (Atom *a, atoms())
+        dipoleMoment += *a->pos() * a->partialCharge();
+
+      // convert from electrons * Angstrom to Debye
+      // (1.602176487×10−19 C / electron) *  (1.0e-10 m/Ang / 3.33564e-30 C/m)
+      // use the negative to go from positive to negative charge (Chemistry)
+      dipoleMoment *= -4.8032046729977;
 
       if (estimate)
         *estimate = true;
+
       m_estimatedDipoleMoment = true;
       return dipoleMoment;
     }
@@ -1675,7 +1669,7 @@ namespace Avogadro{
     // Copy the atoms and bonds over
     unsigned int size = other.m_atoms.size();
     for (unsigned int i = 0; i < size; ++i) {
-      if (other.m_atoms.at(i) > 0) {
+      if (other.m_atoms.at(i) != 0) {
         Atom *atom = new Atom(this);
         atom->setId(other.m_atoms[i]->id());
         atom->setIndex(other.m_atoms[i]->index());

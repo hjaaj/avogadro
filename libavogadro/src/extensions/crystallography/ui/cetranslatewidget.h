@@ -4,7 +4,7 @@
   Copyright (C) 2011 by David C. Lonie
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   This source code is released under the New BSD License, (the "License").
 
@@ -17,6 +17,8 @@
 
 #ifndef CETRANSLATEWIDGET_H
 #define CETRANSLATEWIDGET_H
+
+#include "config.h"
 
 #include "ceabstractdockwidget.h"
 #include "ui_cetranslatewidget.h"

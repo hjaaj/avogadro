@@ -6,7 +6,7 @@
   Copyright (C) 2008-2009 by Marcus D. Hanwell
 
   This file is part of the Avogadro molecular editor project.
-  For more information, see <http://avogadro.openmolecules.net/>
+  For more information, see <http://avogadro.cc/>
 
   Avogadro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -40,6 +40,7 @@
 #include <QDebug>
 #include <QLibraryInfo>
 #include <QProcess>
+#include <QFont>
 
 #include <iostream>
 
@@ -76,6 +77,15 @@ int main(int argc, char *argv[])
   }
 #endif
 
+#ifdef Q_WS_MACX
+    if ( QSysInfo::MacintoshVersion > QSysInfo::MV_10_8 )
+    {
+        // fix Mac OS X 10.9 (mavericks) font issue
+        // https://bugreports.qt-project.org/browse/QTBUG-32789
+        QFont::insertSubstitution(".Lucida Grande UI", "Lucida Grande");
+    }
+#endif
+
   // set up groups for QSettings
   QCoreApplication::setOrganizationName("SourceForge");
   QCoreApplication::setOrganizationDomain("sourceforge.net");
@@ -109,8 +119,14 @@ int main(int argc, char *argv[])
                           + "/../share/openbabel/").toAscii());
   QByteArray babelLibDir((QCoreApplication::applicationDirPath()
                          + "/../lib/openbabel").toAscii());
+
+#ifdef _MSC_VER
+  int res1 = _putenv_s("BABEL_DATADIR", babelDataDir.data());
+  int res2 = _putenv_s("BABEL_LIBDIR", babelLibDir.data());
+#else
   int res1 = setenv("BABEL_DATADIR", babelDataDir.data(), 1);
   int res2 = setenv("BABEL_LIBDIR", babelLibDir.data(), 1);
+#endif
 
   qDebug() << "BABEL_LIBDIR" << babelLibDir.data();
 
@@ -158,6 +174,12 @@ int main(int argc, char *argv[])
 
   qDebug() << "Locale: " << translationCode;
 
+  // As suggested by iwao aoyama to make sure Windows opens files with kanji characters
+#ifdef WIN32
+  QString lang = QLocale::languageToString(QLocale::system().language());
+  std::locale::global(std::locale(lang.toLocal8Bit().constData()));
+#endif
+
   // Load Qt translations first
   bool tryLoadingQtTranslations = false;
   QString qtFilename = "qt_" + translationCode + ".qm";
@@ -197,7 +219,7 @@ int main(int argc, char *argv[])
     printVersion(arguments[0]);
     return 0;
   }
-  else if(arguments.contains("-h") || arguments.contains("-help") 
+  else if(arguments.contains("-h") || arguments.contains("-help")
   	|| arguments.contains("--help")) {
     printHelp(arguments[0]);
     return 0;
